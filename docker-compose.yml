@@ -1,0 +1,35 @@
+
+
+services:
+  mongo:
+    image: mongo:7
+    
+    environment:
+      MONGO_INITDB_DATABASE: toursdb
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - tours-network
+  backend:
+    image: tours-backend
+    container_name: tours-backend
+    ports:
+      - "5000:5000"
+    networks:
+      - tours-network
+
+  frontend:
+    image: tours-frontend
+    container_name: tours-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - tours-network
+
+networks:
+  tours-network:
+    driver: bridge
+volumes:
+    mongo-data:
