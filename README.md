@@ -13,6 +13,6 @@ docker compose up --build
 ```
 ### Services
 
-- Frontend: http://localhost
+- Frontend: http://localhost:3000
 - Backend: http://localhost:5000
 - MongoDB: mongodb://localhost:27017
