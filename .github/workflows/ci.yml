@@ -1,0 +1,51 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      # Backend
+      - name: Install backend deps
+        run: |
+          cd backend
+          npm install
+
+      - name: Lint backend
+        run: |
+          cd backend
+          npm run lint
+
+      - name: Test backend
+        run: |
+          cd backend
+          npm test
+
+      # Frontend
+      - name: Install frontend deps
+        run: |
+          cd frontend
+          npm install
+
+      - name: Test frontend
+        run: |
+          cd frontend
+          npm test
+
+      # Docker build check
+      - name: Build Docker images
+        run: docker compose build
