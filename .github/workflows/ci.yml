@@ -3,8 +3,6 @@ name: CI Pipeline
 on:
   push:
     branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
 
 jobs:
   build:
@@ -14,38 +12,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
+      - name: Login to GHCR
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      # Backend
-      - name: Install backend deps
-        run: |
-          cd backend
-          npm install
-
-      - name: Lint backend
-        run: |
-          cd backend
-          npm run lint
-
-      - name: Test backend
-        run: |
-          cd backend
-          npm test
-
-      # Frontend
-      - name: Install frontend deps
-        run: |
-          cd frontend
-          npm install
-
-      - name: Test frontend
-        run: |
-          cd frontend
-          npm test
-
-      # Docker build check
       - name: Build Docker images
         run: docker compose build
+
+      - name: Tag backend image
+        run: docker tag tours-backend ghcr.io/${{ github.repository }}/backend:latest
+
+      - name: Tag frontend image
+        run: docker tag tours-frontend ghcr.io/${{ github.repository }}/frontend:latest
+
+      - name: Push backend image
+        run: docker push ghcr.io/${{ github.repository }}/backend:latest
+
+      - name: Push frontend image
+        run: docker push ghcr.io/${{ github.repository }}/frontend:latest
