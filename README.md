@@ -2,7 +2,7 @@
 
 ### Prerequisites
 - Docker
-- Docker Compose
+- Docker   Compose
 
 ### Steps to run
 
