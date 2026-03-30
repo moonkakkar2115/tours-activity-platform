@@ -9,39 +9,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      # 2. Set up Docker
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # 3. Login to GitHub Container Registry
-      - name: Login to GHCR
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.GHCR_USERNAME }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      # 4. Build backend Docker image
       - name: Build backend image
         run: docker build -t tours-backend ./backend
 
-      # 5. Build frontend Docker image
       - name: Build frontend image
         run: docker build -t tours-frontend ./frontend
 
-      # 6. Push images to GHCR
       - name: Push backend image
-        run: docker tag tours-backend ghcr.io/${{ github.repository }}/backend:latest && \
-             docker push ghcr.io/${{ github.repository }}/backend:latest
+        run: docker tag tours-backend ghcr.io/${{ github.repository }}/backend:latest && docker push ghcr.io/${{ github.repository }}/backend:latest
 
       - name: Push frontend image
-        run: docker tag tours-frontend ghcr.io/${{ github.repository }}/frontend:latest && \
-             docker push ghcr.io/${{ github.repository }}/frontend:latest
+        run: docker tag tours-frontend ghcr.io/${{ github.repository }}/frontend:latest && docker push ghcr.io/${{ github.repository }}/frontend:latest
 
-      # 7. Deploy to EC2
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.9
         with:
