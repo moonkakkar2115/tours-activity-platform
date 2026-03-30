@@ -22,7 +22,6 @@ services:
 
   frontend:
     build: ./frontend
-    image: tours-frontend
     container_name: tours-frontend
     ports:
       - "3000:80"
