@@ -1,13 +1,19 @@
-# Stage 1: Build React app
-FROM node:20 AS build
+FROM node:18
+
 WORKDIR /app
+
+# Install dependencies
 COPY package*.json ./
 RUN npm install
+
+# Copy all source code
 COPY . .
+
+# Build frontend
 RUN npm run build
 
-# Stage 2: Serve with Nginx
-FROM nginx:stable-alpine
-COPY --from=build /app/build /usr/share/nginx/html
-EXPOSE 3000
-CMD ["nginx", "-g", "daemon off;"]
+# Expose port 80
+EXPOSE 80
+
+# Serve the built app
+CMD ["npx", "serve", "-s", "build"]

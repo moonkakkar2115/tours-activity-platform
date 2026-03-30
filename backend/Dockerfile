@@ -1,5 +1,5 @@
-# Use Node.js LTS
-FROM node:20
+# Use official Node.js image
+FROM node:18
 
 # Set working directory
 WORKDIR /app
@@ -10,11 +10,11 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
-# Copy backend code
+# Copy rest of the code
 COPY . .
 
-# Expose port (change if your backend uses another port)
+# Expose port
 EXPOSE 5000
 
-# Start the backend
-CMD ["npm", "start"]
+# Start the app
+CMD ["node", "index.js"]
